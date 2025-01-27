@@ -14,6 +14,11 @@ $CONFIG = @{
     # Project Settings
     API_PROJECT    = "src\Fii.Api.Web"
     PORTAL_PROJECT = "src\Fii.Web.Server"
+
+    # URLs and Ports
+    API_URL      = "https://localhost:44308"
+    PORTAL_URL   = "https://localhost:5001"
+    SWAGGER_URL  = "https://localhost:44308/swagger"
 }
 
 #-----------------------------------------------------------------------------
@@ -28,6 +33,8 @@ Set-Alias api Start-Api
 
 function Start-ApiQuick {
     Set-Location $CONFIG.API_PATH
+    Write-Host "API will be available at: $($CONFIG.API_URL)" -ForegroundColor Green
+    Write-Host "Swagger available at: $($CONFIG.SWAGGER_URL)" -ForegroundColor Green
     dotnet run --project $CONFIG.API_PROJECT
 }
 Set-Alias apirun Start-ApiQuick
@@ -50,7 +57,7 @@ function Reset-Api {
     dotnet restore
     dotnet build
 }
-Set-Alias reset-api Reset-Api
+Set-Alias fix-api Reset-Api
 
 function Test-Api {
     Set-Location $CONFIG.API_PATH
@@ -70,6 +77,8 @@ Set-Alias portal Start-Portal
 
 function Start-PortalQuick {
     Set-Location $CONFIG.PORTAL_PATH
+    Write-Host "Portal will be available at: $($CONFIG.PORTAL_URL)" -ForegroundColor Green
+    Write-Host "Press CTRL+Click to open in browser" -ForegroundColor Green
     dotnet run --project $CONFIG.PORTAL_PROJECT
 }
 Set-Alias portalrun Start-PortalQuick
@@ -92,13 +101,134 @@ function Reset-Portal {
     dotnet restore
     dotnet build
 }
-Set-Alias reset-portal Reset-Portal
+Set-Alias fix-portal Reset-Portal
 
 function Test-Portal {
     Set-Location $CONFIG.PORTAL_PATH
     dotnet test
 }
 Set-Alias test-portal Test-Portal
+
+#-----------------------------------------------------------------------------
+# Package Management Commands
+#-----------------------------------------------------------------------------
+function Restore-PortalPackages {
+    Set-Location $CONFIG.PORTAL_PATH
+    Write-Host "Clearing NuGet cache..." -ForegroundColor Yellow
+    dotnet nuget locals all --clear
+    
+    Write-Host "Removing bin and obj folders..." -ForegroundColor Yellow
+    Get-ChildItem -Path $CONFIG.PORTAL_PATH -Include bin,obj -Recurse -Directory | Remove-Item -Recurse -Force
+    
+    Write-Host "Restoring NuGet packages..." -ForegroundColor Yellow
+    dotnet restore
+    
+    Write-Host "Building solution..." -ForegroundColor Yellow
+    dotnet build
+}
+Set-Alias fix-packages Restore-PortalPackages
+
+#-----------------------------------------------------------------------------
+# Browser Commands
+#-----------------------------------------------------------------------------
+function Open-Portal {
+    Start-Process $CONFIG.PORTAL_URL
+    Write-Host "Opening Portal at $($CONFIG.PORTAL_URL)" -ForegroundColor Green
+}
+Set-Alias web Open-Portal
+
+function Open-Swagger {
+    Start-Process $CONFIG.SWAGGER_URL
+    Write-Host "Opening Swagger at $($CONFIG.SWAGGER_URL)" -ForegroundColor Green
+}
+Set-Alias swagger Open-Swagger
+
+#-----------------------------------------------------------------------------
+# Git Commands
+#-----------------------------------------------------------------------------
+function Get-ApiGitStatus {
+    Set-Location $CONFIG.API_PATH
+    Write-Host "API Git Status:" -ForegroundColor Yellow
+    git branch --show-current
+    Write-Host "`nStatus:" -ForegroundColor Yellow
+    git status -s
+}
+Set-Alias gst-api Get-ApiGitStatus
+
+function Get-PortalGitStatus {
+    Set-Location $CONFIG.PORTAL_PATH
+    Write-Host "Portal Git Status:" -ForegroundColor Yellow
+    git branch --show-current
+    Write-Host "`nStatus:" -ForegroundColor Yellow
+    git status -s
+}
+Set-Alias gst-portal Get-PortalGitStatus
+
+function Get-GitStatus {
+    Write-Host "Current Directory Git Status:" -ForegroundColor Yellow
+    git branch --show-current
+    Write-Host "`nStatus:" -ForegroundColor Yellow
+    git status -s
+}
+Set-Alias gst Get-GitStatus
+
+function Switch-MainBranch {
+    git checkout main
+    git pull origin main
+}
+Set-Alias main Switch-MainBranch
+
+#-----------------------------------------------------------------------------
+# Solution Commands
+#-----------------------------------------------------------------------------
+function Open-ApiSolution {
+    Set-Location $CONFIG.API_PATH
+    Start-Process "Fischer-Identity-Api.sln"
+}
+Set-Alias openapi Open-ApiSolution
+
+function Open-PortalSolution {
+    Set-Location $CONFIG.PORTAL_PATH
+    Start-Process "Fischer-Identity-Portal.sln"
+}
+Set-Alias openportal Open-PortalSolution
+
+#-----------------------------------------------------------------------------
+# Full Stack Commands
+#-----------------------------------------------------------------------------
+function Start-FullStack {
+    # Start API in new window
+    Start-Process powershell -ArgumentList "-NoExit -Command `"cd '$($CONFIG.API_PATH)'; dotnet run --project $($CONFIG.API_PROJECT)`""
+    
+    # Wait for API to start
+    Start-Sleep -Seconds 5
+    
+    # Start Portal
+    Set-Location $CONFIG.PORTAL_PATH
+    dotnet run --project $CONFIG.PORTAL_PROJECT
+}
+Set-Alias fullstack Start-FullStack
+
+#-----------------------------------------------------------------------------
+# Cleanup Commands
+#-----------------------------------------------------------------------------
+function Clear-BinObj {
+    param(
+        [string]$path = "."
+    )
+    Write-Host "Removing bin and obj folders in $path..." -ForegroundColor Yellow
+    Get-ChildItem -Path $path -Include bin,obj -Recurse -Directory | Remove-Item -Recurse -Force
+}
+Set-Alias cleanup Clear-BinObj
+
+#-----------------------------------------------------------------------------
+# Log Commands
+#-----------------------------------------------------------------------------
+function Get-PortalLogs {
+    Set-Location "$($CONFIG.PORTAL_PATH)\logs"
+    Get-Content -Path ".\portal-*.log" -Tail 50 -Wait
+}
+Set-Alias logs Get-PortalLogs
 
 #-----------------------------------------------------------------------------
 # Development Environment Setup
