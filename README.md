@@ -1,93 +1,100 @@
-# PowerShell Development Profile
+# PowerShell Profile Commands
 
-A configurable PowerShell profile for .NET development with API and Portal projects.
+Easy reference guide for all custom commands in the development profile.
 
-## Quick Setup
+## API Commands
 
-1. Show your PowerShell profile path:
-```powershell
-$PROFILE
-```
+| Command | Description |
+|---------|-------------|
+| `api` | Start the API with full build |
+| `apirun` | Start the API quickly (no explicit build) |
+| `dbapi` | Start API in debug mode |
+| `cdapi` | Navigate to API project directory |
+| `fix-api` | Reset API project (clean, restore, build) |
+| `test-api` | Run API tests |
 
-2. Create or open your profile:
-```powershell
-# Create if it doesn't exist
-New-Item -Path $PROFILE -Type File -Force
+## Portal Commands
 
-# Open in notepad
-notepad $PROFILE
-```
+| Command | Description |
+|---------|-------------|
+| `portal` | Start the Portal with full build |
+| `portalrun` | Start the Portal quickly (no explicit build) |
+| `dbportal` | Start Portal in debug mode |
+| `cdportal` | Navigate to Portal project directory |
+| `fix-portal` | Reset Portal project (clean, restore, build) |
+| `test-portal` | Run Portal tests |
 
-3. Copy the contents of `profile.ps1` into your PowerShell profile
+## Package Management
 
-4. Configure your paths and URLs in the `$CONFIG` section:
-```powershell
-$CONFIG = @{
-    # Project Paths
-    API_PATH     = "YOUR_API_PATH"
-    PORTAL_PATH  = "YOUR_PORTAL_PATH"
-    
-    # Project Settings
-    API_PROJECT    = "src\YourApi.Project"
-    PORTAL_PROJECT = "src\YourPortal.Project"
+| Command | Description |
+|---------|-------------|
+| `fix-packages` | Deep clean and restore Portal packages |
 
-    # URLs and Ports
-    API_URL      = "https://localhost:YOUR_API_PORT"
-    PORTAL_URL   = "https://localhost:YOUR_PORTAL_PORT"
-    SWAGGER_URL  = "https://localhost:YOUR_API_PORT/swagger"
-}
-```
+## Browser Commands
 
-## Available Commands
+| Command | Description |
+|---------|-------------|
+| `web` | Open Portal in default browser |
+| `swagger` | Open Swagger in default browser |
 
-### Navigation
-- `cdapi` - Go to API directory
-- `cdportal` - Go to Portal directory
+## Git Commands
 
-### Run Applications
-- `api` - Build and run API
-- `apirun` - Quick run API (no rebuild)
-- `portal` - Build and run Portal
-- `portalrun` - Quick run Portal (no rebuild)
-- `fullstack` - Run both API and Portal
-- `dbapi` - Debug API
-- `dbportal` - Debug Portal
+| Command | Description |
+|---------|-------------|
+| `gst-api` | Show API git status |
+| `gst-portal` | Show Portal git status |
+| `gst` | Show git status for current directory |
+| `main` | Switch to main branch and pull latest |
 
-### Browser Access
-- `web` - Open Portal in browser
-- `swagger` - Open Swagger documentation
+## Solution Commands
 
-### Visual Studio
-- `openapi` - Open API solution
-- `openportal` - Open Portal solution
+| Command | Description |
+|---------|-------------|
+| `openapi` | Open API solution in Visual Studio |
+| `openportal` | Open Portal solution in Visual Studio |
 
-### Build & Test
-- `test-api` - Run API tests
-- `test-portal` - Run Portal tests
-- `fix-api` - Clean and rebuild API
-- `fix-portal` - Clean and rebuild Portal
-- `fix-packages` - Deep clean and restore NuGet packages
+## Full Stack Commands
 
-### Git Commands
-- `gst` - Git status of current directory
-- `gst-api` - Git status of API
-- `gst-portal` - Git status of Portal
-- `main` - Switch to main branch and pull
+| Command | Description |
+|---------|-------------|
+| `fullstack` | Start both API and Portal |
 
-### Maintenance
-- `cleanup` - Remove bin and obj folders
-- `logs` - View Portal logs
-- `reset-dev` - Reset development certificates
+## Cleanup Commands
 
-## Requirements
-- PowerShell 5.1 or higher
-- .NET SDK
-- Git (for git commands)
+| Command | Description |
+|---------|-------------|
+| `cleanup` | Remove bin and obj folders from a path |
 
-## Troubleshooting
+## Log Commands
 
-### SSL Certificate Issues
-Use `reset-dev` to reset your development certificates
+| Command | Description |
+|---------|-------------|
+| `logs` | Show and follow Portal logs |
 
-### Package Issues
-Use `fix-packages` to perform a deep clean and restore of NuGet packages
+## Environment Setup
+
+| Command | Description |
+|---------|-------------|
+| `reset-dev` | Reset dev environment (certs, packages) |
+| `reset-dev-all` | Reset dev environment and initialize secrets |
+
+## LocalStack and Secrets Commands
+
+| Command | Description |
+|---------|-------------|
+| `localstack` | Start LocalStack container |
+| `stoplocalstack` | Stop LocalStack container |
+| `secrets` | Load JWT secrets |
+| `secrets-up` | Start LocalStack and load secrets (one command) |
+| `start-secrets` | Same as secrets-up |
+| `devsecrets` | Initialize dev secrets (legacy command) |
+| `ls-status` | Check LocalStack container status |
+
+## Fisher Docker Commands
+
+| Command | Description |
+|---------|-------------|
+| `cddocker` | Navigate to Docker project directory |
+| `docker-up` | Start Fisher Docker containers |
+| `docker-down` | Stop Fisher Docker containers |
+| `docker-restart` | Restart Fisher Docker containers |
