@@ -1,6 +1,6 @@
 # PowerShell Profile Commands
 
-Easy reference guide for all custom commands in the development profile.
+Reference guide for all development environment commands.
 
 ## API Commands
 
@@ -28,14 +28,14 @@ Easy reference guide for all custom commands in the development profile.
 
 | Command | Description |
 |---------|-------------|
-| `fix-packages` | Deep clean and restore Portal packages |
+| `fix-packages` | Deep clean and restore packages |
 
 ## Browser Commands
 
 | Command | Description |
 |---------|-------------|
-| `web` | Open Portal in default browser |
-| `swagger` | Open Swagger in default browser |
+| `web` | Open Portal in browser |
+| `swagger` | Open Swagger in browser |
 
 ## Git Commands
 
@@ -58,6 +58,7 @@ Easy reference guide for all custom commands in the development profile.
 | Command | Description |
 |---------|-------------|
 | `fullstack` | Start both API and Portal |
+| `start-all` or `fiiup` | Start complete environment (see below) |
 
 ## Cleanup Commands
 
@@ -70,6 +71,7 @@ Easy reference guide for all custom commands in the development profile.
 | Command | Description |
 |---------|-------------|
 | `logs` | Show and follow Portal logs |
+| `tomcat-logs` or `identity-logs` | View Tomcat/Identity server logs |
 
 ## Environment Setup
 
@@ -85,8 +87,7 @@ Easy reference guide for all custom commands in the development profile.
 | `localstack` | Start LocalStack container |
 | `stoplocalstack` | Stop LocalStack container |
 | `secrets` | Load JWT secrets |
-| `secrets-up` | Start LocalStack and load secrets (one command) |
-| `start-secrets` | Same as secrets-up |
+| `secrets-up` or `start-secrets` | Start LocalStack and load secrets |
 | `devsecrets` | Initialize dev secrets (legacy command) |
 | `ls-status` | Check LocalStack container status |
 
@@ -98,3 +99,29 @@ Easy reference guide for all custom commands in the development profile.
 | `docker-up` | Start Fisher Docker containers |
 | `docker-down` | Stop Fisher Docker containers |
 | `docker-restart` | Restart Fisher Docker containers |
+
+## Identity/Tomcat Commands
+
+| Command | Description |
+|---------|-------------|
+| `cdtomcat` | Navigate to Tomcat directory |
+| `cdtomcatbin` | Navigate to Tomcat bin directory |
+| `identity` or `tomcat` or `identity-up` | Start Identity/Tomcat server |
+| `identity-down` or `tomcat-down` | Stop Identity/Tomcat server |
+| `identity-restart` or `tomcat-restart` | Restart Identity/Tomcat server |
+
+## Complete Environment Startup
+
+| Command | Description |
+|---------|-------------|
+| `start-all` or `fiiup` | Start the complete environment in the correct sequence |
+
+The `start-all` command automatically starts the following in sequence:
+1. LocalStack (secret store)
+2. Loads JWT secrets
+3. Starts Identity server (Tomcat)
+4. Starts Fisher Docker containers
+5. Starts API in a new window
+6. Starts Portal
+
+Each step includes appropriate wait times to ensure dependencies are ready.
